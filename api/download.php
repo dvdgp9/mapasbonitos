@@ -10,7 +10,7 @@ require_once __DIR__ . '/response.php';
 
 Response::handleCors();
 
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'GET') {
     Response::error('Method not allowed', 405);
 }
 

@@ -16,7 +16,8 @@ $db = Database::getInstance();
 $rateLimiter = new RateLimiter();
 
 // Route by method
-switch ($_SERVER['REQUEST_METHOD']) {
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+switch ($method) {
     case 'GET':
         handleGetJob($db);
         break;
