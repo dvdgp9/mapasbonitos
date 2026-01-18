@@ -504,6 +504,13 @@ a {
     font-weight: 500;
 }
 
+.status-note {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-top: 0.5rem;
+    margin-left: 2rem;
+}
+
 .status-success {
     background: rgba(16, 185, 129, 0.1);
     color: var(--color-success);
