@@ -1,0 +1,48 @@
+# Environment and secrets
+.env
+private/
+*.env.local
+
+# Storage (generated maps)
+storage/renders/
+storage/*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Generated posters (keep maptoposter-main/posters for examples)
+# maptoposter-main/posters/ - NOT ignored, contains example images for README

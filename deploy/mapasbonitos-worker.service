@@ -1,0 +1,27 @@
+[Unit]
+Description=Mapas Bonitos - Python Worker
+Documentation=https://github.com/yourusername/mapasbonitos
+After=network.target mysql.service
+Wants=mysql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/mapas.iaiapro.com/maptoposter-main
+ExecStart=/var/www/mapas.iaiapro.com/venv/bin/python worker.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=mapasbonitos-worker
+
+# Environment
+Environment=PYTHONUNBUFFERED=1
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

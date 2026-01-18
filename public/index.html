@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapas Bonitos - Genera mapas artísticos de cualquier ciudad</title>
+    <meta name="description" content="Crea mapas minimalistas y artísticos de cualquier ciudad del mundo. Elige entre 17 temas únicos y descarga en alta resolución.">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="/" class="logo">
+                <span class="logo-icon">🗺️</span>
+                <span class="logo-text">Mapas Bonitos</span>
+            </a>
+            <nav class="nav">
+                <a href="#crear" class="nav-link">Crear Mapa</a>
+                <a href="#galeria" class="nav-link">Galería</a>
+                <a href="#temas" class="nav-link">Temas</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1 class="hero-title">Crea mapas artísticos de cualquier ciudad</h1>
+                <p class="hero-subtitle">
+                    Transforma cualquier ubicación del mundo en un mapa minimalista y elegante.
+                    17 temas únicos. Alta resolución. Listo para imprimir.
+                </p>
+                <a href="#crear" class="btn btn-primary btn-lg">Crear mi mapa</a>
+            </div>
+        </section>
+
+        <!-- Gallery Preview -->
+        <section id="galeria" class="section gallery-section">
+            <div class="container">
+                <h2 class="section-title">Ejemplos</h2>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="examples/tokyo_japanese_ink.jpg" alt="Tokyo - Japanese Ink" loading="lazy">
+                        <div class="gallery-caption">Tokyo • Japanese Ink</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="examples/paris_noir.jpg" alt="Paris - Noir" loading="lazy">
+                        <div class="gallery-caption">París • Noir</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="examples/barcelona_warm_beige.jpg" alt="Barcelona - Warm Beige" loading="lazy">
+                        <div class="gallery-caption">Barcelona • Warm Beige</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="examples/dubai_midnight_blue.jpg" alt="Dubai - Midnight Blue" loading="lazy">
+                        <div class="gallery-caption">Dubai • Midnight Blue</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Create Map Section -->
+        <section id="crear" class="section create-section">
+            <div class="container">
+                <h2 class="section-title">Crear tu mapa</h2>
+                
+                <form id="createMapForm" class="create-form">
+                    <!-- Step 1: Location -->
+                    <div class="form-group">
+                        <label for="location" class="form-label">
+                            📍 Ubicación
+                        </label>
+                        <input 
+                            type="text" 
+                            id="location" 
+                            name="location" 
+                            class="form-input"
+                            placeholder="Ej: Madrid, España"
+                            required
+                            autocomplete="off"
+                        >
+                        <span class="form-hint">Ciudad, país o dirección completa</span>
+                    </div>
+
+                    <!-- Step 2: Theme -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            🎨 Tema
+                        </label>
+                        <div id="themesGrid" class="themes-grid">
+                            <div class="themes-loading">Cargando temas...</div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Distance -->
+                    <div class="form-group">
+                        <label for="distance" class="form-label">
+                            📏 Área del mapa
+                        </label>
+                        <div class="distance-slider">
+                            <input 
+                                type="range" 
+                                id="distance" 
+                                name="distance" 
+                                min="4000" 
+                                max="20000" 
+                                value="10000" 
+                                step="1000"
+                                class="form-range"
+                            >
+                            <div class="distance-labels">
+                                <span>Detallado (4km)</span>
+                                <span id="distanceValue">10 km</span>
+                                <span>Amplio (20km)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Optional: Custom Title -->
+                    <details class="form-details">
+                        <summary>Opciones avanzadas</summary>
+                        <div class="form-group">
+                            <label for="title" class="form-label">Título personalizado</label>
+                            <input 
+                                type="text" 
+                                id="title" 
+                                name="title" 
+                                class="form-input"
+                                placeholder="Dejar vacío para usar el nombre de la ciudad"
+                                maxlength="100"
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="subtitle" class="form-label">Subtítulo</label>
+                            <input 
+                                type="text" 
+                                id="subtitle" 
+                                name="subtitle" 
+                                class="form-input"
+                                placeholder="Dejar vacío para usar el país"
+                                maxlength="100"
+                            >
+                        </div>
+                    </details>
+
+                    <!-- Submit -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                            <span class="btn-text">Generar mapa</span>
+                            <span class="btn-loading" hidden>
+                                <span class="spinner"></span>
+                                Procesando...
+                            </span>
+                        </button>
+                        <p class="form-note" id="rateLimit"></p>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Status Modal -->
+        <div id="statusModal" class="modal" hidden>
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Generando tu mapa</h3>
+                </div>
+                <div class="modal-body">
+                    <div id="statusQueued" class="status-step">
+                        <span class="status-icon">⏳</span>
+                        <span class="status-text">En cola...</span>
+                    </div>
+                    <div id="statusRunning" class="status-step" hidden>
+                        <span class="status-icon">
+                            <span class="spinner"></span>
+                        </span>
+                        <span class="status-text">Generando mapa...</span>
+                    </div>
+                    <div id="statusDone" class="status-step status-success" hidden>
+                        <span class="status-icon">✅</span>
+                        <span class="status-text">¡Mapa listo!</span>
+                    </div>
+                    <div id="statusError" class="status-step status-error" hidden>
+                        <span class="status-icon">❌</span>
+                        <span class="status-text">Error al generar el mapa</span>
+                    </div>
+                    
+                    <div id="statusInfo" class="status-info">
+                        <p><strong>Ubicación:</strong> <span id="infoLocation">-</span></p>
+                        <p><strong>Tema:</strong> <span id="infoTheme">-</span></p>
+                    </div>
+
+                    <div id="resultPreview" class="result-preview" hidden>
+                        <p>Tu mapa está listo para descargar:</p>
+                    </div>
+
+                    <div id="errorMessage" class="error-message" hidden></div>
+                </div>
+                <div class="modal-footer">
+                    <button id="downloadBtn" class="btn btn-primary" hidden>
+                        ⬇️ Descargar mapa
+                    </button>
+                    <button id="closeModalBtn" class="btn btn-secondary">
+                        Cerrar
+                    </button>
+                    <button id="newMapBtn" class="btn btn-primary" hidden>
+                        Crear otro mapa
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Themes Section -->
+        <section id="temas" class="section themes-section">
+            <div class="container">
+                <h2 class="section-title">17 temas únicos</h2>
+                <p class="section-subtitle">
+                    Desde el minimalismo japonés hasta el neón cyberpunk. 
+                    Cada tema está diseñado para resaltar la belleza de las calles.
+                </p>
+                <div id="themesShowcase" class="themes-showcase"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>
+                Datos de mapas © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors
+            </p>
+            <p>
+                Hecho con ❤️ usando Python, OSMnx y mucha creatividad
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
