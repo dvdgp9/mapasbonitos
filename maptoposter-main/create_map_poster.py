@@ -10,6 +10,11 @@ import json
 import os
 from datetime import datetime
 import argparse
+from shapely.geometry import Polygon, MultiPolygon
+
+# Enable OSMnx caching to speed up repeated requests
+ox.settings.use_cache = True
+ox.settings.cache_folder = 'cache'
 
 THEMES_DIR = "themes"
 FONTS_DIR = "fonts"
@@ -218,9 +223,9 @@ def create_poster(city, country, point, dist, output_file):
     
     # Progress bar for data fetching
     with tqdm(total=3, desc="Fetching map data", unit="step", bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}') as pbar:
-        # 1. Fetch Street Network
+        # 1. Fetch Street Network (use 'drive' for faster downloads, includes all major roads)
         pbar.set_description("Downloading street network")
-        G = ox.graph_from_point(point, dist=dist, dist_type='bbox', network_type='all')
+        G = ox.graph_from_point(point, dist=dist, dist_type='bbox', network_type='drive', simplify=True)
         pbar.update(1)
         time.sleep(0.5)  # Rate limit between requests
         
@@ -243,6 +248,17 @@ def create_poster(city, country, point, dist, output_file):
     
     print("✓ All data downloaded successfully!")
     
+    # Filter to only polygon geometries (removes Point geometries that show as dots)
+    def filter_polygons(gdf):
+        if gdf is None or gdf.empty:
+            return None
+        mask = gdf.geometry.apply(lambda g: isinstance(g, (Polygon, MultiPolygon)))
+        filtered = gdf[mask]
+        return filtered if not filtered.empty else None
+    
+    water = filter_polygons(water)
+    parks = filter_polygons(parks)
+    
     # 2. Setup Plot
     print("Rendering map...")
     fig, ax = plt.subplots(figsize=(12, 16), facecolor=THEME['bg'])
@@ -250,7 +266,7 @@ def create_poster(city, country, point, dist, output_file):
     ax.set_position([0, 0, 1, 1])
     
     # 3. Plot Layers
-    # Layer 1: Polygons
+    # Layer 1: Polygons only (no points)
     if water is not None and not water.empty:
         water.plot(ax=ax, facecolor=THEME['water'], edgecolor='none', zorder=1)
     if parks is not None and not parks.empty:
