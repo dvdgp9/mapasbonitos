@@ -99,7 +99,8 @@ def get_cached_geocode(conn, query):
     
     if result:
         print(f"  ✓ Geocoding desde caché: {query}")
-        return (result['latitude'], result['longitude']), result['display_name']
+        # Convert Decimal to float for numpy compatibility
+        return (float(result['latitude']), float(result['longitude'])), result['display_name']
     
     return None, None
 
